@@ -1,59 +1,133 @@
 import 'dart:async';
-import 'dart:io';
-
-import 'package:archive/archive_io.dart';
 import 'package:file_saver/file_saver.dart';
 import 'package:flutter/material.dart';
-import 'package:path_provider/path_provider.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:screenshot/screenshot.dart';
-
+enum ColorType{
+  background, text
+}
 class FileManagementProvider extends ChangeNotifier {
   final TextEditingController quotesTextController = TextEditingController();
   final ScreenshotController screenshotController = ScreenshotController();
 
-  final StreamController<Widget> _quoteStreamController =
-      StreamController<Widget>();
-  Stream<Widget> get quoteStream => _quoteStreamController.stream;
 
-  generatePicture(
-      {Color color = Colors.white,
-      double borderRadius = 2.0,
-      double fontSize = 40,
-      FontWeight fontWeight = FontWeight.bold,
-      double lineHeight = 1.5,
-      required double width,
-      required double height}) async {
+
+  Color? selectedColor;
+  colorChange(Color color) {
+    selectedColor = color;
+    notifyListeners();
+  }
+
+
+  Color? selectedTextColor;
+  textColorChange(Color color) {
+    selectedTextColor = color;
+    notifyListeners();
+  }
+
+
+  double selectedRadius = 5.0;
+  radiusChange(double radius) {
+    selectedRadius = radius;
+    notifyListeners();
+  }
+
+  double selectedHeight = 400;
+  heightChange(double height) {
+    selectedHeight = height;
+    notifyListeners();
+  }
+
+  double selectedWidth = 400;
+  widthChange(double width) {
+    selectedWidth = width;
+    notifyListeners();
+  }
+
+  double selectedFontSize = 35;
+  fontSizeChange(double size) {
+    selectedFontSize = size;
+    notifyListeners();
+  }
+
+  double selectedLineHeight = 1.0;
+  lineHeightChange(double h) {
+    selectedLineHeight = h;
+    notifyListeners();
+  }
+
+  FontWeight selectedFontWeight = FontWeight.bold;
+  fontWeightChange(FontWeight w) {
+    selectedFontWeight = w;
+    notifyListeners();
+  }
+
+  Alignment align =Alignment.center;
+  textPositionChange(Alignment position) {
+    align = position;
+    notifyListeners();
+  }
+
+  String selectedFont ='Lato';
+  fontChange(String font) {
+    selectedFont = font;
+    notifyListeners();
+  }
+
+
+  String _quote_0 = '';
+  String get quoteToFront =>_quote_0;
+  changeQuote(String newQuote){
+    _quote_0 = newQuote;
+    notifyListeners();
+  }
+
+  final StreamController<String> _quoteStreamController =
+  StreamController<String>.broadcast();
+  Stream<String> get quoteStream => _quoteStreamController.stream;
+
+  generatePicture() async {
     List<String> quotesList = quotesTextController.text.split("\n");
-    quotesTextController.clear();
+    // quotesTextController.clear();
 
     for (var quote in quotesList) {
+      _quoteStreamController.sink.add(quote);
+
+      await Future.delayed(const Duration(seconds: 1));
       Widget quoteWidget = Stack(
         children: [
-          Image.asset("bg2.png",
-              width: width, height: height, fit: BoxFit.cover),
+          ClipRRect(
+            borderRadius: BorderRadius.circular(selectedRadius),
+            child: Image.asset("assets/bg2.png",
+                width: selectedWidth,
+                height: selectedHeight,
+                fit: BoxFit.cover),
+          ),
           Container(
-            width: width,
-            height: height,
+            width: selectedWidth,
+            height: selectedHeight,
             padding: const EdgeInsets.all(50),
             decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(borderRadius),
-                color: color.withOpacity(0.1)),
-            alignment: Alignment.center,
+                borderRadius: BorderRadius.circular(selectedRadius),
+                color: selectedColor),
+          ),
+          Container(
+            alignment: align,
+            width: selectedWidth,
+            height: selectedHeight,
+            padding: const EdgeInsets.all(25),
             child: Text(
-              quote,
+             quote,
               textAlign: TextAlign.center,
-              style: TextStyle(
-                  fontSize: fontSize,
-                  fontWeight: fontWeight,
-                  height: lineHeight),
+              style: GoogleFonts.getFont(selectedFont,
+                  color: selectedTextColor,
+                  fontSize: selectedFontSize,
+                  fontWeight: selectedFontWeight,
+                  height: selectedLineHeight),
             ),
           )
         ],
       );
-
-      _quoteStreamController.sink.add(quoteWidget);
-      await Future.delayed(const Duration(seconds: 1));
-
       screenshotController
           .captureFromWidget(quoteWidget,
               delay: const Duration(milliseconds: 10))
@@ -72,7 +146,6 @@ class FileManagementProvider extends ChangeNotifier {
       //       mimeType: MimeType.PNG);
       // }).catchError((onError) {});
     }
-    _quoteStreamController.close();
   }
 }
 
