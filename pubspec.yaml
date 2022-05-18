@@ -41,6 +41,7 @@ dependencies:
   archive: ^3.3.0
   flutter_colorpicker: ^1.0.3
   google_fonts: ^2.3.2
+  flutter_screenutil: ^5.5.2
   
 
 dev_dependencies:

@@ -22,6 +22,7 @@ class _QuotePageState extends State<QuotePage> {
   Widget build(BuildContext context) {
     final DrawerProvider _drawerProvider = Provider.of<DrawerProvider>(context);
     final FileManagementProvider _fileManagementProvider = Provider.of<FileManagementProvider>(context);
+    Size _size = MediaQuery.of(context).size;
 
     return Scaffold(
       backgroundColor: Colors.cyan.shade100,
@@ -38,7 +39,8 @@ class _QuotePageState extends State<QuotePage> {
           Expanded(
             child: Container(
               margin: const EdgeInsets.only(top: 50, left: 50),
-              constraints: const BoxConstraints(minWidth: 1000, minHeight: 1000),
+              width: _size.width, height: _size.height,
+              // constraints: const BoxConstraints(minWidth: 1000, minHeight: 1000),
               child: SingleChildScrollView(
                 controller: ScrollController(),
                 scrollDirection: Axis.horizontal,
@@ -244,28 +246,39 @@ class _QuotePageState extends State<QuotePage> {
                     ),
                     const SizedBox(width: 30),
                     Column(children: [
-                      Container(
-                        width: 300,
-                  constraints: BoxConstraints(minHeight: 200,  maxHeight: 600),
-                        child: GridView.builder(
-                          controller: ScrollController(),
-                          shrinkWrap: true,
-
-                          gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 2, childAspectRatio: 2, crossAxisSpacing: 5, mainAxisSpacing: 5),
-                          itemBuilder: (context, index) {
-                            String font = GoogleFonts.asMap().keys.toList()[index];
-                            return GestureDetector(
-                              onTap: () => _fileManagementProvider.fontChange(font),
-                              child: Container(
-                                  width: 100,
-                                  height: 60,
-                                  alignment: Alignment.center,
-                                  decoration:
-                                      BoxDecoration( border: Border.all(color: Colors.black), borderRadius: BorderRadius.circular(15), color: Colors.white60),
-                                  child: Text(font, textAlign: TextAlign.center, style: GoogleFonts.getFont(font),)),
-                            );
-                          },
-                          itemCount: GoogleFonts.asMap().keys.toList().length,
+                      Expanded(
+                        child: SizedBox(
+                          width: 300,
+                          child: GridView.builder(
+                            controller: ScrollController(),
+                            shrinkWrap: true,
+                            gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                                crossAxisCount: 2, childAspectRatio: 2.5, crossAxisSpacing: 5, mainAxisSpacing: 5),
+                            itemBuilder: (context, index) {
+                              String font = GoogleFonts.asMap().keys.toList()[index];
+                              return GestureDetector(
+                                onTap: () => _fileManagementProvider.fontChange(font),
+                                child: Container(
+                                    width: 100,
+                                    alignment: Alignment.center,
+                                    decoration: BoxDecoration(
+                                        border: Border.all(color: Colors.black),
+                                        borderRadius: BorderRadius.circular(15),
+                                        color: Colors.white60),
+                                    child: Text(
+                                      font,
+                                      textAlign: TextAlign.center,
+                                    )),
+                              );
+                            },
+                            itemCount: GoogleFonts.asMap().keys.toList().length,
+                          ),
+                        ),
+                      ),
+                      Expanded(
+                        child: SizedBox(
+                          width: 300,
+                          child: Container(child: Text("Frames here")),
                         ),
                       ),
                     ]),
