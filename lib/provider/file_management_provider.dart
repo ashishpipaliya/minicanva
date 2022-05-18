@@ -74,6 +74,12 @@ class FileManagementProvider extends ChangeNotifier {
     notifyListeners();
   }
 
+  String backgroundImage =assetImages.first;
+  backgroundImageChange(String asset) {
+    backgroundImage = asset;
+    print(backgroundImage);
+    notifyListeners();
+  }
 
   String _quote_0 = '';
   String get quoteToFront =>_quote_0;
@@ -98,7 +104,7 @@ class FileManagementProvider extends ChangeNotifier {
         children: [
           ClipRRect(
             borderRadius: BorderRadius.circular(selectedRadius),
-            child: Image.asset("assets/bg2.png",
+            child: Image.asset(backgroundImage,
                 width: selectedWidth,
                 height: selectedHeight,
                 fit: BoxFit.cover),
@@ -149,7 +155,27 @@ class FileManagementProvider extends ChangeNotifier {
   }
 }
 
-
+List<String> assetImages = [
+  'assets/t1.png',
+  'assets/t2.png',
+  'assets/t3.png',
+  'assets/t4.png',
+  'assets/t5.png',
+  'assets/t6.png',
+  'assets/t7.png',
+  'assets/t8.png',
+  'assets/t9.png',
+  'assets/t10.png',
+  'assets/t11.png',
+  'assets/t12.png',
+  'assets/t13.png',
+  'assets/t14.png',
+  'assets/t15.png',
+  'assets/t16.png',
+  'assets/t17.png',
+  'assets/t18.png',
+  'assets/t19.png'
+];
 
 
 

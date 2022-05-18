@@ -1,7 +1,17 @@
+import 'dart:async';
+
 import 'package:flutter/foundation.dart';
 export 'package:provider/provider.dart';
 
 class DrawerProvider extends ChangeNotifier {
+
+  int selectedIndex = 0;
+  changeIndex(int index){
+    selectedIndex = index;
+    notifyListeners();
+  }
+
+
   bool _isDrawerOpened = true;
   bool get isDrawer => _isDrawerOpened;
 
