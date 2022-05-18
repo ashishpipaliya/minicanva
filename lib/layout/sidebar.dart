@@ -1,8 +1,6 @@
-import 'dart:async';
 import 'package:provider/provider.dart';
 import 'package:flutter/material.dart';
 import 'package:quotesmaker/provider/drawer_provider.dart';
-
 
 class SideBar extends StatefulWidget {
   const SideBar({Key? key}) : super(key: key);
