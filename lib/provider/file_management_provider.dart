@@ -10,21 +10,17 @@ class FileManagementProvider extends ChangeNotifier {
   final TextEditingController quotesTextController = TextEditingController();
   final ScreenshotController screenshotController = ScreenshotController();
 
-
-
   Color? selectedColor;
   colorChange(Color color) {
     selectedColor = color;
     notifyListeners();
   }
 
-
   Color? selectedTextColor;
   textColorChange(Color color) {
     selectedTextColor = color;
     notifyListeners();
   }
-
 
   double selectedRadius = 5.0;
   radiusChange(double radius) {
@@ -81,12 +77,40 @@ class FileManagementProvider extends ChangeNotifier {
     notifyListeners();
   }
 
+  double horizontalPadding =50;
+  horizontalPaddingChange(double padding) {
+    horizontalPadding = padding;
+    notifyListeners();
+  }
+
+  double verticalPadding =50;
+  verticalPaddingChange(double padding) {
+    verticalPadding = padding;
+    notifyListeners();
+  }
+
+  String _progress = '';
+  String get progress =>_progress;
+  progressListener(int count, int length){
+      _progress = 'Download $count/$length complete';
+      notifyListeners();
+  }
+
+  bool _isProcessing = false;
+  bool get isProcessing => _isProcessing;
+processingChange(bool flag){
+  _isProcessing = flag;
+  notifyListeners();
+}
+
+
   String _quote_0 = '';
   String get quoteToFront =>_quote_0;
   changeQuote(String newQuote){
     _quote_0 = newQuote;
     notifyListeners();
   }
+
 
   final StreamController<String> _quoteStreamController =
   StreamController<String>.broadcast();
@@ -96,9 +120,11 @@ class FileManagementProvider extends ChangeNotifier {
     List<String> quotesList = quotesTextController.text.split("\n");
     // quotesTextController.clear();
 
-    for (var quote in quotesList) {
-      _quoteStreamController.sink.add(quote);
+    processingChange(true);
 
+    for (var quote in quotesList) {
+      // _quoteStreamController.sink.add(quote);
+      progressListener(quotesList.indexOf(quote)+1, quotesList.length);
       await Future.delayed(const Duration(seconds: 1));
       Widget quoteWidget = Stack(
         children: [
@@ -121,7 +147,7 @@ class FileManagementProvider extends ChangeNotifier {
             alignment: align,
             width: selectedWidth,
             height: selectedHeight,
-            padding: const EdgeInsets.all(25),
+            padding: EdgeInsets.symmetric(horizontal: horizontalPadding, vertical: verticalPadding),
             child: Text(
              quote,
               textAlign: TextAlign.center,
@@ -152,6 +178,8 @@ class FileManagementProvider extends ChangeNotifier {
       //       mimeType: MimeType.PNG);
       // }).catchError((onError) {});
     }
+    processingChange(false);
+
   }
 }
 

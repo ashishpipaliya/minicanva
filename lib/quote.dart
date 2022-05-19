@@ -26,13 +26,9 @@ class _QuotePageState extends State<QuotePage> {
 
     return Scaffold(
       backgroundColor: Colors.cyan.shade100,
-      // appBar: AppBar(
-      //   leading: IconButton(
-      //       icon: const Icon(Icons.menu),
-      //       onPressed: () {
-      //         _drawerProvider.toggleDrawer();
-      //       }),
-      // ),
+      floatingActionButton: Visibility(
+          visible: !_fileManagementProvider.isProcessing,
+          child: FloatingActionButton.extended( onPressed: _fileManagementProvider.generatePicture , label: Text('Generate'))),
       body: Row(
         children: [
           const SideBar(),
@@ -67,7 +63,7 @@ class _QuotePageState extends State<QuotePage> {
                         alignment: _fileManagementProvider.align,
                         width: _fileManagementProvider.selectedWidth,
                         height: _fileManagementProvider.selectedHeight,
-                        padding: const EdgeInsets.all(25),
+                        padding: EdgeInsets.symmetric(horizontal: _fileManagementProvider.horizontalPadding, vertical: _fileManagementProvider.verticalPadding),
                         child: Text(
                           'If people are doubting how far you can go, go so far that you can’t hear them anymore',
                           textAlign: TextAlign.center,
@@ -121,11 +117,11 @@ class _QuotePageState extends State<QuotePage> {
             children: [
               SizedBox(
                 width: 400,
-                height: 100,
+                // height: 200,
                 child: TextField(
                   controller: _fileManagementProvider.quotesTextController,
                   maxLines: null,
-                  minLines: 5,
+                  minLines: 10,
                   decoration: InputDecoration(
                       fillColor: Colors.white,
                       filled: true,
@@ -289,9 +285,35 @@ class _QuotePageState extends State<QuotePage> {
                       child: const Text("Bottom")),
                 ]),
               ),
+              Container(width: 400,
+                  margin: const EdgeInsets.only(top: 20),
+                  child: Row(
+                    children: [
+                      Expanded(
+                        child: Slider.adaptive(
+                            label: "Horizontal Padding ${_fileManagementProvider.horizontalPadding}",
+                            value: _fileManagementProvider.horizontalPadding,
+                            min: 25,
+                            max: 200,
+                            divisions: 100,
+                            onChanged: _fileManagementProvider.horizontalPaddingChange),
+                      ),
+                      Expanded(
+                        child: Slider.adaptive(
+                            label: "Vertical Padding ${_fileManagementProvider.verticalPadding}",
+                            value: _fileManagementProvider.verticalPadding,
+                            min: 25,
+                            max: 200,
+                            divisions: 100,
+                            onChanged: _fileManagementProvider.verticalPaddingChange),
+                      ),
+                    ],
+                  ),
+
+              ),
               GestureDetector(
                 onTap: () {
-                  _fileManagementProvider.generatePicture();
+                 !_fileManagementProvider.isProcessing ? _fileManagementProvider.generatePicture() : null;
                 },
                 child: Container(
                   alignment: Alignment.center,
@@ -349,7 +371,7 @@ class _QuotePageState extends State<QuotePage> {
                   controller: ScrollController(),
                   shrinkWrap: true,
                   gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                      crossAxisCount: 2, crossAxisSpacing: 5, mainAxisSpacing: 5),
+                      crossAxisCount: 3, crossAxisSpacing: 5, mainAxisSpacing: 5),
                   itemCount: assetImages.length,
                   itemBuilder: (context, index) {
                     String image = assetImages[index];
