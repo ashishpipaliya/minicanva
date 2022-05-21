@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:math';
 import 'package:file_saver/file_saver.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -16,7 +17,7 @@ class FileManagementProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  Color? selectedTextColor;
+  Color selectedTextColor = Colors.black;
   textColorChange(Color color) {
     selectedTextColor = color;
     notifyListeners();
@@ -70,9 +71,13 @@ class FileManagementProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  String backgroundImage =assetImages.first;
+  String backgroundImage =assetImages[2];
   backgroundImageChange(String asset) {
-    backgroundImage = asset;
+    if(asset == 'assets/random.png'){
+      backgroundImage = assetImages[Random().nextInt(assetImages.length)];
+    }else{
+      backgroundImage = asset;
+    }
     print(backgroundImage);
     notifyListeners();
   }
@@ -130,7 +135,7 @@ processingChange(bool flag){
         children: [
           ClipRRect(
             borderRadius: BorderRadius.circular(selectedRadius),
-            child: Image.asset(backgroundImage,
+            child: Image.asset(backgroundImage == 'assets/random.png' ? assetImages[Random().nextInt(assetImages.length)] : backgroundImage,
                 width: selectedWidth,
                 height: selectedHeight,
                 fit: BoxFit.cover),
@@ -184,6 +189,7 @@ processingChange(bool flag){
 }
 
 List<String> assetImages = [
+  'assets/random.png',
   'assets/t1.png',
   'assets/t2.png',
   'assets/t3.png',

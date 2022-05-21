@@ -40,6 +40,8 @@ dependencies:
   path_provider: ^2.0.10
   flutter_colorpicker: ^1.0.3
   google_fonts: ^2.3.2
+  flex_color_scheme: ^5.0.1
+  shared_preferences: ^2.0.15
   
 
 dev_dependencies:

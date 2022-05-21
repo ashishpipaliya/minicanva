@@ -2,39 +2,23 @@ import 'package:provider/provider.dart';
 import 'package:flutter/material.dart';
 import 'package:quotesmaker/provider/drawer_provider.dart';
 
-class SideBar extends StatefulWidget {
-  const SideBar({Key? key}) : super(key: key);
+class MenuBar extends StatefulWidget {
+  const MenuBar({Key? key}) : super(key: key);
 
   @override
-  _SideBarState createState() => _SideBarState();
+  _MenuBarState createState() => _MenuBarState();
 }
 
-class _SideBarState extends State<SideBar> with SingleTickerProviderStateMixin {
+class _MenuBarState extends State<MenuBar> with SingleTickerProviderStateMixin {
   @override
   Widget build(BuildContext context) {
     final DrawerProvider _drawerProvider = Provider.of<DrawerProvider>(context);
-    return Visibility(
-      visible: _drawerProvider.isDrawer,
-      child: Container(
-        padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 15),
-        child: Column(
-          children: [
-            const Spacer(),
-            Row(
-              children: [
-                Column(
-                  children: List.generate(
-                    items.length,
-                    (index) => _buildMenuItem(index, _drawerProvider),
-                  ),
-                ),
-                IconButton(
-                    onPressed: _drawerProvider.showLabelText,
-                    icon: Icon(!_drawerProvider.showLabel ? Icons.arrow_forward_ios : Icons.arrow_back_ios))
-              ],
-            ),
-            const Spacer(),
-          ],
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 15),
+      child:  Row(
+        children: List.generate(
+          items.length,
+              (index) => _buildMenuItem(index, _drawerProvider),
         ),
       ),
     );
@@ -42,10 +26,10 @@ class _SideBarState extends State<SideBar> with SingleTickerProviderStateMixin {
 
   Widget _buildMenuItem(int index, DrawerProvider dp) {
     return Container(
-      margin: const EdgeInsets.only(bottom: 20),
+      margin: const EdgeInsets.only(right: 5, left: 5),
       child: Material(
         borderRadius: BorderRadius.circular(10),
-        color: dp.selectedIndex == index ? Theme.of(context).primaryColor.withOpacity(.1) : null,
+        color: dp.selectedIndex == index ? Theme.of(context).primaryColor.withOpacity(.2) : null,
         child: Padding(
           padding: const EdgeInsets.all(8.0),
           child: Row(
