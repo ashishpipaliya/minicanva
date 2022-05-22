@@ -6,11 +6,13 @@ import 'package:provider/provider.dart';
 import 'package:quotesmaker/provider/drawer_provider.dart';
 import 'package:quotesmaker/provider/file_management_provider.dart';
 import 'package:quotesmaker/quote.dart';
+import 'package:url_strategy/url_strategy.dart';
 
 void main() async{
   WidgetsFlutterBinding.ensureInitialized();
   SystemChrome.setPreferredOrientations(
       [DeviceOrientation.landscapeRight, DeviceOrientation.landscapeLeft]);
+  setPathUrlStrategy();
   runApp(const MyApp());
 }
 
@@ -27,7 +29,7 @@ class MyApp extends StatelessWidget {
       builder: (context, child) {
         final _drawerProvider = Provider.of<DrawerProvider>(context);
         return MaterialApp(
-            title: 'Quotes Generator',
+            title: 'Mini Canva',
             debugShowCheckedModeBanner: false,
             theme: FlexThemeData.light(
               scheme: FlexScheme.green,
@@ -66,3 +68,6 @@ class MyApp extends StatelessWidget {
     );
   }
 }
+
+
+// f2.10 build web --web-renderer canvaskit --release

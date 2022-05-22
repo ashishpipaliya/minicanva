@@ -1,6 +1,6 @@
 import 'dart:async';
 import 'dart:math';
-import 'package:file_saver/file_saver.dart';
+import 'package:download/download.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:screenshot/screenshot.dart';
@@ -78,7 +78,6 @@ class FileManagementProvider extends ChangeNotifier {
     }else{
       backgroundImage = asset;
     }
-    print(backgroundImage);
     notifyListeners();
   }
 
@@ -169,9 +168,10 @@ processingChange(bool flag){
           .captureFromWidget(quoteWidget,
               delay: const Duration(milliseconds: 10))
           .then((capturedImage) async {
-        await FileSaver.instance.saveFile(
-            'quote_${quotesList.indexOf(quote) + 1}', capturedImage, 'png',
-            mimeType: MimeType.PNG);
+            download(Stream.fromIterable(capturedImage), 'quote_${quotesList.indexOf(quote) + 1}.png');
+        // await FileSaver.instance.saveFile(
+        //     'quote_${quotesList.indexOf(quote) + 1}', capturedImage, 'png',
+        //     mimeType: MimeType.PNG);
       }).catchError((onError) {
         print(onError);
       });

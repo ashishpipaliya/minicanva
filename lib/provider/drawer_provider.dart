@@ -57,7 +57,6 @@ class DrawerProvider extends ChangeNotifier {
       _themeMode = ThemeMode.dark;
       _prefs.setString('theme', 'dark');
     }
-    print(_themeMode);
     notifyListeners();
   }
 }
