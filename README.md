@@ -3,11 +3,11 @@
 <br>
 <br>
 <h2>Mini Canva</h2>
-<a href="https://minicanva.xyz/">minicanva.com</a>
+<a href="https://minicanva.xyz/" target='_blank'>minicanva.com</a>
 <p>Bulk Image Generator from given list of quotes, lines</p>
 
-![GitHub repo size](https://img.shields.io/github/repo-size/ashishpipaliya/bundlegenerator?style=for-the-badge)
-![GitHub](https://img.shields.io/github/license/ashishpipaliya/bundlegenerator?style=for-the-badge)
+![GitHub repo size](https://img.shields.io/github/repo-size/ashishpipaliya/minicanva?style=for-the-badge)
+![GitHub](https://img.shields.io/github/license/ashishpipaliya/minicanva?style=for-the-badge)
 </div>
 
 ____
