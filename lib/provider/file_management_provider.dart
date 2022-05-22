@@ -175,16 +175,8 @@ processingChange(bool flag){
       }).catchError((onError) {
         print(onError);
       });
-      // screenshotController
-      //     .capture(delay: const Duration(milliseconds: 10))
-      //     .then((capturedImage) async {
-      //   await FileSaver.instance.saveFile(
-      //       'quote_${quotesList.indexOf(quote) + 1}', capturedImage!, 'png',
-      //       mimeType: MimeType.PNG);
-      // }).catchError((onError) {});
     }
     processingChange(false);
-
   }
 }
 
