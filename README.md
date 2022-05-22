@@ -72,7 +72,7 @@ ____
 
 ## 📜 License
 
-This project is licensed under the [MIT License](https://opensource.org/licenses/MIT) - see the [LICENSE](LICENSE) file for details.
+This project is licensed under the [MIT License](https://opensource.org/licenses/MIT) - see the [LICENSE](LICENSE.md) file for details.
 
 ## 🧰 Contribution
 Feel free to raise issues and open PR
