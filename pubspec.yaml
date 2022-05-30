@@ -43,6 +43,8 @@ dependencies:
   shared_preferences: ^2.0.15
   download: ^0.0.1+1
   url_strategy: ^0.2.0
+  screen_recorder: ^0.0.3
+  glitcheffect: ^1.0.2
 
 dev_dependencies:
   flutter_test:

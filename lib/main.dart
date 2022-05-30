@@ -5,9 +5,10 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:quotesmaker/provider/drawer_provider.dart';
 import 'package:quotesmaker/provider/file_management_provider.dart';
 import 'package:quotesmaker/layout/quote.dart';
+import 'package:quotesmaker/provider/m_themes.dart';
 import 'package:url_strategy/url_strategy.dart';
 
-void main() async{
+void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   SystemChrome.setPreferredOrientations(
       [DeviceOrientation.landscapeRight, DeviceOrientation.landscapeLeft]);
@@ -21,50 +22,21 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MultiProvider(
-      providers: [
-        ChangeNotifierProvider(create: (context) => DrawerProvider()),
-        ChangeNotifierProvider(create: (context) => FileManagementProvider()),
-      ],
-      builder: (context, child) {
-        final _drawerProvider = Provider.of<DrawerProvider>(context);
-        return MaterialApp(
-            title: 'Mini Canva',
-            debugShowCheckedModeBanner: false,
-            theme: FlexThemeData.light(
-              scheme: FlexScheme.green,
-              surfaceMode: FlexSurfaceMode.highScaffoldLowSurface,
-              blendLevel: 20,
-              appBarOpacity: 0.95,
-              subThemesData: const FlexSubThemesData(
-                blendOnLevel: 20,
-                blendOnColors: false,
-                navigationRailElevation: 2.0,
-                navigationRailLabelType: NavigationRailLabelType.none,
-              ),
-              visualDensity: FlexColorScheme.comfortablePlatformDensity,
-              useMaterial3: true,
-              fontFamily: GoogleFonts.notoSans().fontFamily,
-            ),
-            darkTheme: FlexThemeData.dark(
-              scheme: FlexScheme.green,
-              surfaceMode: FlexSurfaceMode.highScaffoldLowSurface,
-              blendLevel: 15,
-              appBarStyle: FlexAppBarStyle.background,
-              appBarOpacity: 0.90,
-              subThemesData: const FlexSubThemesData(
-                blendOnLevel: 30,
-                navigationRailElevation: 2.0,
-                navigationRailLabelType: NavigationRailLabelType.none,
-              ),
-              visualDensity: FlexColorScheme.comfortablePlatformDensity,
-              useMaterial3: true,
-              fontFamily: GoogleFonts.notoSans().fontFamily,
-            ),
-
-            themeMode:_drawerProvider.themeMode,
-            home:const QuotePage());
-      }
-    );
+        providers: [
+          ChangeNotifierProvider(create: (context) => DrawerProvider()),
+          ChangeNotifierProvider(create: (context) => FileManagementProvider()),
+          ChangeNotifierProvider(create: (context) => MthemesProvider()),
+        ],
+        builder: (context, child) {
+          final _themeProvider = Provider.of<MthemesProvider>(context);
+          return MaterialApp(
+              title: 'Mini Canva',
+              debugShowCheckedModeBanner: false,
+              theme: _themeProvider.blueThemeLight,
+              darkTheme: _themeProvider.blueThemeDark,
+              themeMode: _themeProvider.themeMode,
+              home: const QuotePage());
+        });
   }
 }
 

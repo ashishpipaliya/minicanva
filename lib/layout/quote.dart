@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_colorpicker/flutter_colorpicker.dart';
+import 'package:glitcheffect/glitcheffect.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:quotesmaker/layout/menubar.dart';
 import 'package:quotesmaker/provider/drawer_provider.dart';
 import 'package:quotesmaker/provider/file_management_provider.dart';
+import 'package:quotesmaker/provider/m_themes.dart';
 import 'package:quotesmaker/utils/responsive.dart';
 import 'package:screenshot/screenshot.dart';
 
@@ -19,6 +21,9 @@ class _QuotePageState extends State<QuotePage> {
   @override
   Widget build(BuildContext context) {
     final DrawerProvider _drawerProvider = Provider.of<DrawerProvider>(context);
+    final MthemesProvider _themeProvider =
+        Provider.of<MthemesProvider>(context);
+
     final FileManagementProvider _fileManagementProvider =
         Provider.of<FileManagementProvider>(context);
 
@@ -26,8 +31,8 @@ class _QuotePageState extends State<QuotePage> {
       appBar: AppBar(
         actions: [
           IconButton(
-              onPressed: () => _drawerProvider.changeThemeMode(),
-              icon: Icon(_drawerProvider.themeMode == ThemeMode.light
+              onPressed: () => _themeProvider.changeThemeMode(),
+              icon: Icon(_themeProvider.themeMode == ThemeMode.light
                   ? Icons.dark_mode
                   : Icons.light_mode))
         ],
@@ -80,76 +85,63 @@ class _QuotePageState extends State<QuotePage> {
           )),
       body: Padding(
         padding: EdgeInsets.only(top: MediaQuery.of(context).padding.top),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            //  Visibility(
-            //      visible: _drawerProvider.showLabel,
-            //      child: Flexible(child: items(_fileManagementProvider)[_drawerProvider.selectedIndex])),
-            // SizedBox(width: Responsive.isDesktop(context) ? 30 : 10),
-            Container(
+        child: Center(
+          child: AspectRatio(
+            aspectRatio: _fileManagementProvider.selectedWidth /
+                _fileManagementProvider.selectedHeight,
+            child: Container(
                 alignment: Alignment.center,
                 constraints: BoxConstraints(
-                    maxWidth: Responsive.isDesktop(context) ? 1000 : 400),
-                child: SingleChildScrollView(
-                  controller: ScrollController(),
-                  child: Column(
+                    maxHeight: Responsive.isDesktop(context) ? 800 : 400,
+                    maxWidth: Responsive.isDesktop(context) ? 800 : 400),
+                child: Screenshot(
+                  controller: _fileManagementProvider.screenshotController,
+                  child: Stack(
                     children: [
-                      Screenshot(
-                        controller:
-                            _fileManagementProvider.screenshotController,
-                        child: Stack(
-                          children: [
-                            ClipRRect(
-                              borderRadius: BorderRadius.circular(
-                                  _fileManagementProvider.selectedRadius),
-                              child: Image.asset(
-                                  _fileManagementProvider.backgroundImage,
-                                  width: _fileManagementProvider.selectedWidth,
-                                  height:
-                                      _fileManagementProvider.selectedHeight,
-                                  fit: BoxFit.cover),
-                            ),
-                            Container(
-                              width: _fileManagementProvider.selectedWidth,
-                              height: _fileManagementProvider.selectedHeight,
-                              padding: const EdgeInsets.all(50),
-                              decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(
-                                      _fileManagementProvider.selectedRadius),
-                                  color: _fileManagementProvider.selectedColor),
-                            ),
-                            Container(
-                              alignment: _fileManagementProvider.align,
-                              width: _fileManagementProvider.selectedWidth,
-                              height: _fileManagementProvider.selectedHeight,
-                              padding: EdgeInsets.symmetric(
-                                  horizontal:
-                                      _fileManagementProvider.horizontalPadding,
-                                  vertical:
-                                      _fileManagementProvider.verticalPadding),
-                              child: Text(
-                                'If people are doubting how far you can go, go so far that you can’t hear them anymore',
-                                textAlign: TextAlign.center,
-                                style: GoogleFonts.getFont(
-                                    _fileManagementProvider.selectedFont,
-                                    color: _fileManagementProvider
-                                        .selectedTextColor,
-                                    fontSize: _fileManagementProvider
-                                        .selectedFontSize,
-                                    fontWeight: _fileManagementProvider
-                                        .selectedFontWeight,
-                                    height: _fileManagementProvider
-                                        .selectedLineHeight),
-                              ),
-                            )
-                          ],
+                      ClipRRect(
+                        borderRadius: BorderRadius.circular(
+                            _fileManagementProvider.selectedRadius),
+                        child: Image.asset(
+                            _fileManagementProvider.backgroundImage,
+                            width: _fileManagementProvider.selectedWidth,
+                            height: _fileManagementProvider.selectedHeight,
+                            fit: BoxFit.cover),
+                      ),
+                      Container(
+                        width: _fileManagementProvider.selectedWidth,
+                        height: _fileManagementProvider.selectedHeight,
+                        padding: const EdgeInsets.all(50),
+                        decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(
+                                _fileManagementProvider.selectedRadius),
+                            color: _fileManagementProvider.selectedColor),
+                      ),
+                      Container(
+                        alignment: _fileManagementProvider.align,
+                        width: _fileManagementProvider.selectedWidth,
+                        height: _fileManagementProvider.selectedHeight,
+                        padding: EdgeInsets.symmetric(
+                            horizontal:
+                                _fileManagementProvider.horizontalPadding,
+                            vertical: _fileManagementProvider.verticalPadding),
+                        child: Text(
+                          'If people are doubting how far you can go, go so far that you can’t hear them anymore',
+                          textAlign: TextAlign.center,
+                          style: GoogleFonts.getFont(
+                              _fileManagementProvider.selectedFont,
+                              color: _fileManagementProvider.selectedTextColor,
+                              fontSize:
+                                  _fileManagementProvider.selectedFontSize,
+                              fontWeight:
+                                  _fileManagementProvider.selectedFontWeight,
+                              height:
+                                  _fileManagementProvider.selectedLineHeight),
                         ),
                       )
                     ],
                   ),
-                ))
-          ],
+                )),
+          ),
         ),
       ),
     );
@@ -196,7 +188,6 @@ class _QuotePageState extends State<QuotePage> {
                     decoration: InputDecoration(
                         filled: true,
                         isDense: true,
-                        // Added this
                         contentPadding: const EdgeInsets.all(8),
                         border: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(15)),
@@ -213,7 +204,6 @@ class _QuotePageState extends State<QuotePage> {
                         counter: const SizedBox.shrink(),
                         filled: true,
                         isDense: true,
-                        // Added this
                         contentPadding: const EdgeInsets.all(8),
                         border: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(15)),
@@ -234,11 +224,11 @@ class _QuotePageState extends State<QuotePage> {
                             _fileManagementProvider
                                 .widthChange(double.parse(val));
                           },
+                          keyboardType: TextInputType.number,
                           decoration: InputDecoration(
                               counter: const SizedBox.shrink(),
                               filled: true,
                               isDense: true,
-                              // Added this
                               contentPadding: const EdgeInsets.all(8),
                               border: OutlineInputBorder(
                                   borderRadius: BorderRadius.circular(15)),
@@ -256,6 +246,7 @@ class _QuotePageState extends State<QuotePage> {
                             _fileManagementProvider
                                 .heightChange(double.tryParse(val)!);
                           },
+                          keyboardType: TextInputType.number,
                           decoration: InputDecoration(
                               counter: const SizedBox.shrink(),
                               filled: true,
@@ -278,6 +269,7 @@ class _QuotePageState extends State<QuotePage> {
                             _fileManagementProvider
                                 .radiusChange(double.parse(val));
                           },
+                          keyboardType: TextInputType.number,
                           decoration: InputDecoration(
                               counter: const SizedBox.shrink(),
                               filled: true,
@@ -360,10 +352,10 @@ class _QuotePageState extends State<QuotePage> {
                             _fileManagementProvider
                                 .lineHeightChange(double.parse(val));
                           },
+                          keyboardType: TextInputType.number,
                           decoration: InputDecoration(
                               filled: true,
                               isDense: true,
-                              // Added this
                               contentPadding: const EdgeInsets.all(8),
                               border: OutlineInputBorder(
                                 borderRadius: BorderRadius.circular(15),

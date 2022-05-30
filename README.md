@@ -3,7 +3,7 @@
 <br>
 <br>
 <h2>Mini Canva</h2>
-<a href="https://minicanva.xyz/" target='_blank'>minicanva.com</a>
+<a href="https://minicanva.xyz/" target="_blank">minicanva.com</a>
 <p>Bulk Image Generator from given list of quotes, lines</p>
 
 ![GitHub repo size](https://img.shields.io/github/repo-size/ashishpipaliya/minicanva?style=for-the-badge)
@@ -16,7 +16,7 @@ ____
 - Hire <strong>Graphic Designer</strong> to create images
 - We can create ourself using tool like canva or photoshop.
 
-Second option was suitable for me but in canva, I can't generate bulk images like 500 or 1000 images in single click.
+Second option was suitable for me but in Canva, I can't generate bulk images like 500 or 1000 images in single click.
 
 So I created this bulk image generator and named it `Mini Canva`
 ____

@@ -1,11 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 export 'package:provider/provider.dart';
 
 class DrawerProvider extends ChangeNotifier {
-  DrawerProvider(){
-    getThemeMode();
-  }
 
   int selectedIndex = 0;
 
@@ -32,28 +28,4 @@ class DrawerProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  ThemeMode _themeMode = ThemeMode.light;
-  ThemeMode get themeMode => _themeMode;
-
-  getThemeMode() async {
-    SharedPreferences _prefs = await SharedPreferences.getInstance();
-    if (_prefs.getString('theme') == 'dark') {
-      _themeMode = ThemeMode.dark;
-    } else {
-      _themeMode = ThemeMode.light;
-    }
-    notifyListeners();
-  }
-
-  changeThemeMode() async {
-    SharedPreferences _prefs = await SharedPreferences.getInstance();
-    if (_themeMode == ThemeMode.dark) {
-      _themeMode = ThemeMode.light;
-      _prefs.setString('theme', 'light');
-    }else if (_themeMode == ThemeMode.light) {
-      _themeMode = ThemeMode.dark;
-      _prefs.setString('theme', 'dark');
-    }
-    notifyListeners();
-  }
 }
