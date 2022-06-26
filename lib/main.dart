@@ -1,3 +1,4 @@
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flex_color_scheme/flex_color_scheme.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -13,6 +14,14 @@ void main() async {
   SystemChrome.setPreferredOrientations(
       [DeviceOrientation.landscapeRight, DeviceOrientation.landscapeLeft]);
   setPathUrlStrategy();
+  await Firebase.initializeApp(
+      options:const FirebaseOptions(
+        apiKey: "AIzaSyCf9x1qV39dZXsyeFwm535-QO5OGJqB4CI",
+        appId: "1:1006082383544:web:eacbd899dd63d565fede4d",
+        messagingSenderId: "1006082383544",
+        projectId: "mini-canva",
+      )
+  );
   runApp(const MyApp());
 }
 
@@ -39,6 +48,5 @@ class MyApp extends StatelessWidget {
         });
   }
 }
-
 
 // f2.10 build web --web-renderer canvaskit --release

@@ -1,6 +1,6 @@
 {
-    "name": "quotesmaker",
-    "short_name": "quotesmaker",
+    "name": "Mini Canva",
+    "short_name": "minicanva",
     "start_url": ".",
     "display": "standalone",
     "background_color": "#0175C2",

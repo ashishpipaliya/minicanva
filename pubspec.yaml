@@ -45,6 +45,9 @@ dependencies:
   url_strategy: ^0.2.0
   screen_recorder: ^0.0.3
   glitcheffect: ^1.0.2
+  firebase_analytics: ^9.1.9
+  firebase_core: ^1.18.0
+  cached_network_image: ^3.2.0
 
 dev_dependencies:
   flutter_test:

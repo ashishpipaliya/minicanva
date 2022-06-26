@@ -7,6 +7,7 @@ import 'package:quotesmaker/layout/menubar.dart';
 import 'package:quotesmaker/provider/drawer_provider.dart';
 import 'package:quotesmaker/provider/file_management_provider.dart';
 import 'package:quotesmaker/provider/m_themes.dart';
+import 'package:quotesmaker/utils/image_widget.dart';
 import 'package:quotesmaker/utils/responsive.dart';
 import 'package:screenshot/screenshot.dart';
 
@@ -101,11 +102,16 @@ class _QuotePageState extends State<QuotePage> {
                       ClipRRect(
                         borderRadius: BorderRadius.circular(
                             _fileManagementProvider.selectedRadius),
-                        child: Image.asset(
-                            _fileManagementProvider.backgroundImage,
-                            width: _fileManagementProvider.selectedWidth,
-                            height: _fileManagementProvider.selectedHeight,
-                            fit: BoxFit.cover),
+                         child:  ImageWidget(urlOrPath: _fileManagementProvider.backgroundImage,
+                               width: _fileManagementProvider.selectedWidth,
+                               height: _fileManagementProvider.selectedHeight,
+                               fit: BoxFit.cover
+                         )
+                        // child: Image.asset(
+                        //     _fileManagementProvider.backgroundImage,
+                        //     width: _fileManagementProvider.selectedWidth,
+                        //     height: _fileManagementProvider.selectedHeight,
+                        //     fit: BoxFit.cover),
                       ),
                       Container(
                         width: _fileManagementProvider.selectedWidth,
@@ -125,7 +131,7 @@ class _QuotePageState extends State<QuotePage> {
                                 _fileManagementProvider.horizontalPadding,
                             vertical: _fileManagementProvider.verticalPadding),
                         child: Text(
-                          'If people are doubting how far you can go, go so far that you can’t hear them anymore',
+                          'Demo quote sample quote demo quote sample quotes demo quote sample quotes demo quote sample quotes',
                           textAlign: TextAlign.center,
                           style: GoogleFonts.getFont(
                               _fileManagementProvider.selectedFont,
@@ -464,19 +470,41 @@ class _QuotePageState extends State<QuotePage> {
           },
           itemCount: GoogleFonts.asMap().keys.toList().length,
         ),
-        GridView.builder(
-          controller: ScrollController(),
-          shrinkWrap: true,
-          gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-              crossAxisCount: 3, crossAxisSpacing: 5, mainAxisSpacing: 5),
-          itemCount: assetImages.length,
-          itemBuilder: (context, index) {
-            String image = assetImages[index];
-            return InkWell(
-                onTap: () =>
-                    _fileManagementProvider.backgroundImageChange(image),
-                child: Image.asset(image, fit: BoxFit.fitHeight));
-          },
+        CustomScrollView(
+         slivers: [
+           SliverToBoxAdapter(
+             child: GridView.builder(
+               controller: ScrollController(),
+               shrinkWrap: true,
+               gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                   crossAxisCount: 3, crossAxisSpacing: 5, mainAxisSpacing: 5),
+               itemCount: assetImages.length,
+               itemBuilder: (context, index) {
+                 String image = assetImages[index];
+                 return InkWell(
+                     onTap: () =>
+                         _fileManagementProvider.backgroundImageChange(image),
+                     child: ImageWidget(urlOrPath: image));
+               },
+             ),
+           ),
+           SliverToBoxAdapter(
+             child: GridView.builder(
+               controller: ScrollController(),
+               shrinkWrap: true,
+               gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                   crossAxisCount: 3, crossAxisSpacing: 5, mainAxisSpacing: 5),
+               itemCount: networkImages.length,
+               itemBuilder: (context, index) {
+                 String image = networkImages[index];
+                 return InkWell(
+                     onTap: () =>
+                         _fileManagementProvider.backgroundImageChange(image),
+                     child: ImageWidget(urlOrPath: image));
+               },
+             ),
+           ),
+         ],
         )
       ];
 }
