@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_colorpicker/flutter_colorpicker.dart';
-import 'package:glitcheffect/glitcheffect.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:quotesmaker/layout/menubar.dart';
 import 'package:quotesmaker/provider/drawer_provider.dart';

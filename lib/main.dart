@@ -1,8 +1,7 @@
 import 'package:firebase_core/firebase_core.dart';
-import 'package:flex_color_scheme/flex_color_scheme.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:google_fonts/google_fonts.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:quotesmaker/provider/drawer_provider.dart';
 import 'package:quotesmaker/provider/file_management_provider.dart';
 import 'package:quotesmaker/layout/quote.dart';
@@ -14,14 +13,14 @@ void main() async {
   SystemChrome.setPreferredOrientations(
       [DeviceOrientation.landscapeRight, DeviceOrientation.landscapeLeft]);
   setPathUrlStrategy();
+  await dotenv.load(fileName: ".env");
+
   await Firebase.initializeApp(
-      options:const FirebaseOptions(
-        apiKey: "AIzaSyCf9x1qV39dZXsyeFwm535-QO5OGJqB4CI",
-        appId: "1:1006082383544:web:eacbd899dd63d565fede4d",
-        messagingSenderId: "1006082383544",
-        projectId: "mini-canva",
-      )
-  );
+      options: FirebaseOptions(
+          apiKey: dotenv.get('apiKey'),
+          appId: dotenv.get('appId'),
+          messagingSenderId: dotenv.get('messagingSenderId'),
+          projectId: dotenv.get('projectId')));
   runApp(const MyApp());
 }
 
