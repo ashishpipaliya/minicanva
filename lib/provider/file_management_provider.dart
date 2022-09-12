@@ -200,6 +200,8 @@ class FileManagementProvider extends ChangeNotifier {
 
 List<String> assetImages = [
   'assets/random.png',
+  'assets/WHITE1.png',
+  'assets/BLACK1.jpg',
   'assets/t1.png',
   'assets/t2.png',
   'assets/t3.png',
