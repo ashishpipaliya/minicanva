@@ -1,7 +1,11 @@
 import 'dart:async';
+import 'dart:convert';
+import 'dart:io';
 import 'dart:math';
 import 'dart:typed_data';
+import 'package:csv/csv.dart';
 import 'package:download/download.dart';
+import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:quotesmaker/utils/image_widget.dart';
@@ -20,7 +24,7 @@ class FileManagementProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  Color selectedTextColor = Colors.black;
+  Color selectedTextColor = const Color(0XFFfb9685);
 
   textColorChange(Color color) {
     selectedTextColor = color;
@@ -28,65 +32,55 @@ class FileManagementProvider extends ChangeNotifier {
   }
 
   double selectedRadius = 5.0;
-
   radiusChange(double radius) {
     selectedRadius = radius;
     notifyListeners();
   }
 
   double selectedHeight = 400;
-
   heightChange(double height) {
     selectedHeight = height;
     notifyListeners();
   }
 
   double selectedWidth = 400;
-
   widthChange(double width) {
     selectedWidth = width;
     notifyListeners();
   }
 
-  double selectedFontSize = 35;
-
+  double selectedFontSize = 30;
   fontSizeChange(double size) {
     selectedFontSize = size;
     notifyListeners();
   }
 
   double selectedLineHeight = 1.0;
-
   lineHeightChange(double h) {
     selectedLineHeight = h;
     notifyListeners();
   }
 
   FontWeight selectedFontWeight = FontWeight.bold;
-
   fontWeightChange(FontWeight w) {
     selectedFontWeight = w;
     notifyListeners();
   }
 
   Alignment align = Alignment.center;
-
   textPositionChange(Alignment position) {
     align = position;
     notifyListeners();
   }
 
   String selectedFont = 'Lato';
-
   fontChange(String font) {
     selectedFont = font;
     notifyListeners();
   }
 
   bool isNetworkImage = false;
-
-  String backgroundImage = assetImages[2];
-
+  String backgroundImage = assetImages[4];
   backgroundImageChange(String asset) {
     if (asset == 'assets/random.png') {
       backgroundImage = assetImages[Random().nextInt(assetImages.length)];
@@ -196,12 +190,38 @@ class FileManagementProvider extends ChangeNotifier {
     await Future.wait([...ssList]);
     processingChange(false);
   }
+
+
+
+  Future<List<List<dynamic>>?> pickFileAndGetData() async {
+    FilePickerResult? result = await FilePicker.platform.pickFiles(
+      type: FileType.custom,
+      allowMultiple: false,
+      allowedExtensions: ['csv'],
+    );
+
+
+    if (result != null) {
+      PlatformFile? file = result.files.first;
+      final fileBytes = result.files.first.bytes;
+      final input = File.fromRawPath(fileBytes!).openRead();;
+      // final input = File(file.path!).openRead();
+      final fields = await input.transform(utf8.decoder).transform(const CsvToListConverter()).toList();
+
+      // csvData = fields;
+      // for (var element in fields) {
+      //   print('Title - ${element[0]} | Name - ${element[1]}');
+      // }
+
+      return fields;
+    }
+    return null;
+  }
 }
+
 
 List<String> assetImages = [
   'assets/random.png',
-  'assets/WHITE1.png',
-  'assets/BLACK1.jpg',
   'assets/t1.png',
   'assets/t2.png',
   'assets/t3.png',

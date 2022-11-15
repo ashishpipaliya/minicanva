@@ -10,8 +10,7 @@ import 'package:url_strategy/url_strategy.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  SystemChrome.setPreferredOrientations(
-      [DeviceOrientation.landscapeRight, DeviceOrientation.landscapeLeft]);
+  SystemChrome.setPreferredOrientations([DeviceOrientation.landscapeRight, DeviceOrientation.landscapeLeft]);
   setPathUrlStrategy();
   await dotenv.load(fileName: ".env");
 
@@ -38,12 +37,13 @@ class MyApp extends StatelessWidget {
         builder: (context, child) {
           final _themeProvider = Provider.of<MthemesProvider>(context);
           return MaterialApp(
-              title: 'Mini Canva',
-              debugShowCheckedModeBanner: false,
-              theme: _themeProvider.blueThemeLight,
-              darkTheme: _themeProvider.blueThemeDark,
-              themeMode: _themeProvider.themeMode,
-              home: const QuotePage());
+            title: 'Mini Canva',
+            debugShowCheckedModeBanner: false,
+            theme: _themeProvider.blueThemeLight,
+            darkTheme: _themeProvider.blueThemeDark,
+            themeMode: _themeProvider.themeMode,
+            home: const QuotePage(),
+          );
         });
   }
 }

@@ -1,3 +1,9 @@
+import 'dart:convert';
+import 'dart:developer';
+import 'dart:io';
+
+import 'package:csv/csv.dart';
+import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_colorpicker/flutter_colorpicker.dart';
@@ -21,28 +27,23 @@ class _QuotePageState extends State<QuotePage> {
   @override
   Widget build(BuildContext context) {
     final DrawerProvider _drawerProvider = Provider.of<DrawerProvider>(context);
-    final MthemesProvider _themeProvider =
-        Provider.of<MthemesProvider>(context);
+    final MthemesProvider _themeProvider = Provider.of<MthemesProvider>(context);
 
-    final FileManagementProvider _fileManagementProvider =
-        Provider.of<FileManagementProvider>(context);
+    final FileManagementProvider _fileManagementProvider = Provider.of<FileManagementProvider>(context);
 
     return Scaffold(
       appBar: AppBar(
         actions: [
           IconButton(
               onPressed: () => _themeProvider.changeThemeMode(),
-              icon: Icon(_themeProvider.themeMode == ThemeMode.light
-                  ? Icons.dark_mode
-                  : Icons.light_mode))
+              icon: Icon(_themeProvider.themeMode == ThemeMode.light ? Icons.dark_mode : Icons.light_mode))
         ],
       ),
       drawerScrimColor: Colors.transparent,
       floatingActionButton: Visibility(
           visible: !_fileManagementProvider.isProcessing,
           child: FloatingActionButton.extended(
-              onPressed: _fileManagementProvider.generatePicture,
-              label: const Text('Generate'))),
+              onPressed: _fileManagementProvider.generatePicture, label: const Text('Generate'))),
       drawer: Drawer(
           elevation: 0,
           child: Padding(
@@ -57,9 +58,7 @@ class _QuotePageState extends State<QuotePage> {
                     MenuBar(),
                   ],
                 )),
-                Expanded(
-                    child: items(_fileManagementProvider)[
-                        _drawerProvider.selectedIndex]),
+                Expanded(child: items(_fileManagementProvider)[_drawerProvider.selectedIndex]),
               ],
             ),
           )),
@@ -77,9 +76,7 @@ class _QuotePageState extends State<QuotePage> {
                     MenuBar(),
                   ],
                 )),
-                Expanded(
-                    child: items(_fileManagementProvider)[
-                        _drawerProvider.selectedIndex]),
+                Expanded(child: items(_fileManagementProvider)[_drawerProvider.selectedIndex]),
               ],
             ),
           )),
@@ -87,8 +84,7 @@ class _QuotePageState extends State<QuotePage> {
         padding: EdgeInsets.only(top: MediaQuery.of(context).padding.top),
         child: Center(
           child: AspectRatio(
-            aspectRatio: _fileManagementProvider.selectedWidth /
-                _fileManagementProvider.selectedHeight,
+            aspectRatio: _fileManagementProvider.selectedWidth / _fileManagementProvider.selectedHeight,
             child: Container(
                 alignment: Alignment.center,
                 constraints: BoxConstraints(
@@ -99,26 +95,24 @@ class _QuotePageState extends State<QuotePage> {
                   child: Stack(
                     children: [
                       ClipRRect(
-                        borderRadius: BorderRadius.circular(
-                            _fileManagementProvider.selectedRadius),
-                         child:  ImageWidget(urlOrPath: _fileManagementProvider.backgroundImage,
-                               width: _fileManagementProvider.selectedWidth,
-                               height: _fileManagementProvider.selectedHeight,
-                               fit: BoxFit.cover
-                         )
-                        // child: Image.asset(
-                        //     _fileManagementProvider.backgroundImage,
-                        //     width: _fileManagementProvider.selectedWidth,
-                        //     height: _fileManagementProvider.selectedHeight,
-                        //     fit: BoxFit.cover),
-                      ),
+                          borderRadius: BorderRadius.circular(_fileManagementProvider.selectedRadius),
+                          child: ImageWidget(
+                              urlOrPath: _fileManagementProvider.backgroundImage,
+                              width: _fileManagementProvider.selectedWidth,
+                              height: _fileManagementProvider.selectedHeight,
+                              fit: BoxFit.cover)
+                          // child: Image.asset(
+                          //     _fileManagementProvider.backgroundImage,
+                          //     width: _fileManagementProvider.selectedWidth,
+                          //     height: _fileManagementProvider.selectedHeight,
+                          //     fit: BoxFit.cover),
+                          ),
                       Container(
                         width: _fileManagementProvider.selectedWidth,
                         height: _fileManagementProvider.selectedHeight,
                         padding: const EdgeInsets.all(50),
                         decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(
-                                _fileManagementProvider.selectedRadius),
+                            borderRadius: BorderRadius.circular(_fileManagementProvider.selectedRadius),
                             color: _fileManagementProvider.selectedColor),
                       ),
                       Container(
@@ -126,21 +120,16 @@ class _QuotePageState extends State<QuotePage> {
                         width: _fileManagementProvider.selectedWidth,
                         height: _fileManagementProvider.selectedHeight,
                         padding: EdgeInsets.symmetric(
-                            horizontal:
-                                _fileManagementProvider.horizontalPadding,
+                            horizontal: _fileManagementProvider.horizontalPadding,
                             vertical: _fileManagementProvider.verticalPadding),
                         child: Text(
                           'Demo quote sample quote demo quote sample quotes demo quote sample quotes demo quote sample quotes',
                           textAlign: TextAlign.center,
-                          style: GoogleFonts.getFont(
-                              _fileManagementProvider.selectedFont,
+                          style: GoogleFonts.getFont(_fileManagementProvider.selectedFont,
                               color: _fileManagementProvider.selectedTextColor,
-                              fontSize:
-                                  _fileManagementProvider.selectedFontSize,
-                              fontWeight:
-                                  _fileManagementProvider.selectedFontWeight,
-                              height:
-                                  _fileManagementProvider.selectedLineHeight),
+                              fontSize: _fileManagementProvider.selectedFontSize,
+                              fontWeight: _fileManagementProvider.selectedFontWeight,
+                              height: _fileManagementProvider.selectedLineHeight),
                         ),
                       )
                     ],
@@ -161,9 +150,8 @@ class _QuotePageState extends State<QuotePage> {
                 controller: ScrollController(),
                 child: ColorPicker(
                   pickerColor: Theme.of(context).primaryColor,
-                  onColorChanged: (color) => type == ColorType.background
-                      ? provider.colorChange(color)
-                      : provider.textColorChange(color),
+                  onColorChanged: (color) =>
+                      type == ColorType.background ? provider.colorChange(color) : provider.textColorChange(color),
                 ),
               ),
               actions: [
@@ -194,62 +182,75 @@ class _QuotePageState extends State<QuotePage> {
                         filled: true,
                         isDense: true,
                         contentPadding: const EdgeInsets.all(8),
-                        border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(15)),
+                        border: OutlineInputBorder(borderRadius: BorderRadius.circular(15)),
                         hintText: 'Enter quotes one in a line'),
                   ),
                 ),
+                const SizedBox(height: 10),
+                const Text('OR'),
                 Container(
-                  margin: const EdgeInsets.only(top: 20),
-                  child: TextField(
-                    maxLength: 4,
-                    enabled: false,
-                    inputFormatters: [FilteringTextInputFormatter.digitsOnly],
-                    decoration: InputDecoration(
-                        counter: const SizedBox.shrink(),
-                        filled: true,
-                        isDense: true,
-                        contentPadding: const EdgeInsets.all(8),
-                        border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(15)),
-                        hintText: 'Quantity'),
-                  ),
+                  margin: const EdgeInsets.only(top: 10),
+                  child: ElevatedButton(
+                      onPressed: () async {
+                        // _fileManagementProvider.pickFileAndGetData().then((value) {
+                        //   if(value!= null){
+                        //     _fileManagementProvider.quotesTextController.text = value.join('\n');
+                        //   }
+                        // });
+
+                        FilePickerResult? result = await FilePicker.platform.pickFiles(
+                          type: FileType.custom,
+                          allowMultiple: false,
+                          allowedExtensions: ['csv'],
+                        );
+
+                        if (result != null) {
+                          PlatformFile? file = result.files.first;
+                          final fileBytes = result.files.first.bytes;
+                          final input = File.fromRawPath(fileBytes!).openRead();
+                          // final input = File(file.path!).openRead();
+                          final fields =
+                              await input.transform(utf8.decoder).transform(const CsvToListConverter()).toList();
+                        }
+                      },
+                      // csvData = fields;
+                      // for (var element in fields) {
+                      //   print('Title - ${element[0]} | Name - ${element[1]}');
+                      // }
+
+                      child: const Text('Choose CSV file')),
                 ),
+                const Divider(),
                 Container(
                   margin: const EdgeInsets.only(top: 20),
                   child: Row(
                     children: [
                       Flexible(
                         child: TextField(
-                          maxLength: 4,
-                          inputFormatters: [
-                            FilteringTextInputFormatter.digitsOnly
-                          ],
+                          maxLength: 3,
+                          inputFormatters: [FilteringTextInputFormatter.digitsOnly],
                           onChanged: (val) {
-                            _fileManagementProvider
-                                .widthChange(double.parse(val));
+                            _fileManagementProvider.widthChange(double.parse(val));
                           },
                           keyboardType: TextInputType.number,
+                          textAlignVertical: TextAlignVertical.center,
                           decoration: InputDecoration(
                               counter: const SizedBox.shrink(),
                               filled: true,
                               isDense: true,
                               contentPadding: const EdgeInsets.all(8),
-                              border: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(15)),
-                              hintText: 'Width'),
+                              border: OutlineInputBorder(borderRadius: BorderRadius.circular(15)),
+                              hintText: 'Width',
+                              hintStyle: const TextStyle(fontSize: 12)),
                         ),
                       ),
                       const SizedBox(width: 10),
                       Flexible(
                         child: TextField(
-                          maxLength: 4,
-                          inputFormatters: [
-                            FilteringTextInputFormatter.digitsOnly
-                          ],
+                          maxLength: 3,
+                          inputFormatters: [FilteringTextInputFormatter.digitsOnly],
                           onChanged: (val) {
-                            _fileManagementProvider
-                                .heightChange(double.tryParse(val)!);
+                            _fileManagementProvider.heightChange(double.tryParse(val)!);
                           },
                           keyboardType: TextInputType.number,
                           decoration: InputDecoration(
@@ -258,21 +259,18 @@ class _QuotePageState extends State<QuotePage> {
                               isDense: true,
                               // Added this
                               contentPadding: const EdgeInsets.all(8),
-                              border: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(15)),
-                              hintText: 'Height'),
+                              border: OutlineInputBorder(borderRadius: BorderRadius.circular(15)),
+                              hintText: 'Height',
+                              hintStyle: const TextStyle(fontSize: 12)),
                         ),
                       ),
                       const SizedBox(width: 10),
                       Flexible(
                         child: TextField(
                           maxLength: 2,
-                          inputFormatters: [
-                            FilteringTextInputFormatter.digitsOnly
-                          ],
+                          inputFormatters: [FilteringTextInputFormatter.digitsOnly],
                           onChanged: (val) {
-                            _fileManagementProvider
-                                .radiusChange(double.parse(val));
+                            _fileManagementProvider.radiusChange(double.parse(val));
                           },
                           keyboardType: TextInputType.number,
                           decoration: InputDecoration(
@@ -281,9 +279,9 @@ class _QuotePageState extends State<QuotePage> {
                               isDense: true,
                               // Added this
                               contentPadding: const EdgeInsets.all(8),
-                              border: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(15)),
-                              hintText: 'Radius'),
+                              border: OutlineInputBorder(borderRadius: BorderRadius.circular(15)),
+                              hintText: 'Radius',
+                              hintStyle: const TextStyle(fontSize: 12)),
                         ),
                       ),
                     ],
@@ -295,27 +293,20 @@ class _QuotePageState extends State<QuotePage> {
                     children: [
                       Flexible(
                         child: GestureDetector(
-                          onTap: () => _openColorPicker(
-                              _fileManagementProvider, ColorType.background),
+                          onTap: () => _openColorPicker(_fileManagementProvider, ColorType.background),
                           child: Container(
-                            decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(15)),
+                            decoration: BoxDecoration(borderRadius: BorderRadius.circular(15)),
                             child: AbsorbPointer(
                               child: TextField(
                                 decoration: InputDecoration(
-                                    fillColor:
-                                        _fileManagementProvider.selectedColor ??
-                                            Colors.transparent,
-                                    filled:
-                                        _fileManagementProvider.selectedColor !=
-                                            null,
+                                    fillColor: _fileManagementProvider.selectedColor ?? Colors.transparent,
+                                    filled: _fileManagementProvider.selectedColor != null,
                                     isDense: true,
                                     // Added this
                                     contentPadding: const EdgeInsets.all(8),
-                                    border: OutlineInputBorder(
-                                        borderRadius:
-                                            BorderRadius.circular(15)),
-                                    hintText: 'Color'),
+                                    border: OutlineInputBorder(borderRadius: BorderRadius.circular(15)),
+                                    hintText: 'Background',
+                                    hintStyle: const TextStyle(fontSize: 12)),
                               ),
                             ),
                           ),
@@ -324,23 +315,19 @@ class _QuotePageState extends State<QuotePage> {
                       const SizedBox(width: 10),
                       Flexible(
                         child: GestureDetector(
-                          onTap: () => _openColorPicker(
-                              _fileManagementProvider, ColorType.text),
+                          onTap: () => _openColorPicker(_fileManagementProvider, ColorType.text),
                           child: Container(
-                            decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(15)),
+                            decoration: BoxDecoration(borderRadius: BorderRadius.circular(15)),
                             child: AbsorbPointer(
                               child: TextField(
                                 decoration: InputDecoration(
-                                    fillColor: _fileManagementProvider
-                                        .selectedTextColor,
+                                    fillColor: _fileManagementProvider.selectedTextColor,
                                     isDense: true,
                                     // Added this
                                     contentPadding: const EdgeInsets.all(8),
-                                    border: OutlineInputBorder(
-                                        borderRadius:
-                                            BorderRadius.circular(15)),
-                                    hintText: 'Text color'),
+                                    border: OutlineInputBorder(borderRadius: BorderRadius.circular(15)),
+                                    hintText: 'Text color',
+                                    hintStyle: const TextStyle(fontSize: 12)),
                               ),
                             ),
                           ),
@@ -349,13 +336,9 @@ class _QuotePageState extends State<QuotePage> {
                       const SizedBox(width: 10),
                       Flexible(
                         child: TextField(
-                          inputFormatters: [
-                            FilteringTextInputFormatter.allow(
-                                RegExp(r'^\d+\.?\d*'))
-                          ],
+                          inputFormatters: [FilteringTextInputFormatter.allow(RegExp(r'^\d+\.?\d*'))],
                           onChanged: (val) {
-                            _fileManagementProvider
-                                .lineHeightChange(double.parse(val));
+                            _fileManagementProvider.lineHeightChange(double.parse(val));
                           },
                           keyboardType: TextInputType.number,
                           decoration: InputDecoration(
@@ -365,79 +348,68 @@ class _QuotePageState extends State<QuotePage> {
                               border: OutlineInputBorder(
                                 borderRadius: BorderRadius.circular(15),
                               ),
-                              hintText: 'Line height'),
+                              hintText: 'Line height',
+                              hintStyle: const TextStyle(fontSize: 12)),
                         ),
                       ),
                     ],
                   ),
                 ),
-                Container(
-                  margin: const EdgeInsets.only(top: 20),
-                  child: Slider(
-                      label:
-                          "Font size ${_fileManagementProvider.selectedFontSize}",
-                      value: _fileManagementProvider.selectedFontSize,
-                      min: 10,
-                      max: 100,
-                      divisions: 90,
-                      onChanged: _fileManagementProvider.fontSizeChange),
-                ),
-                Container(
-                  margin: const EdgeInsets.only(top: 20),
-                  child:
-                      ButtonBar(alignment: MainAxisAlignment.center, children: [
-                    TextButton(
-                        onPressed: () => _fileManagementProvider
-                            .textPositionChange(Alignment.topCenter),
-                        child: const Text("Top")),
-                    TextButton(
-                        onPressed: () => _fileManagementProvider
-                            .textPositionChange(Alignment.center),
-                        child: const Text("Center")),
-                    TextButton(
-                        onPressed: () => _fileManagementProvider
-                            .textPositionChange(Alignment.bottomCenter),
-                        child: const Text("Bottom")),
-                  ]),
-                ),
-                Container(
-                  margin: const EdgeInsets.only(top: 20),
-                  child: Row(
-                    children: [
-                      Expanded(
-                        child: Slider.adaptive(
-                            label:
-                                "Horizontal Padding ${_fileManagementProvider.horizontalPadding}",
-                            value: _fileManagementProvider.horizontalPadding,
-                            min: 25,
-                            max: 200,
-                            divisions: 100,
-                            onChanged: _fileManagementProvider
-                                .horizontalPaddingChange),
-                      ),
-                      Expanded(
-                        child: Slider.adaptive(
-                            label:
-                                "Vertical Padding ${_fileManagementProvider.verticalPadding}",
-                            value: _fileManagementProvider.verticalPadding,
-                            min: 25,
-                            max: 200,
-                            divisions: 100,
-                            onChanged:
-                                _fileManagementProvider.verticalPaddingChange),
-                      ),
-                    ],
-                  ),
+                const Divider(),
+                const SizedBox(height: 20),
+                const Text('Font size'),
+                Slider(
+                    label: "Font size ${_fileManagementProvider.selectedFontSize}",
+                    value: _fileManagementProvider.selectedFontSize,
+                    min: 10,
+                    max: 100,
+                    divisions: 90,
+                    onChanged: _fileManagementProvider.fontSizeChange),
+                const Divider(),
+                const SizedBox(height: 20),
+                const Text('Text alignment'),
+                ButtonBar(alignment: MainAxisAlignment.center, children: [
+                  TextButton(
+                      onPressed: () => _fileManagementProvider.textPositionChange(Alignment.topCenter),
+                      child: const Text("Top")),
+                  TextButton(
+                      onPressed: () => _fileManagementProvider.textPositionChange(Alignment.center),
+                      child: const Text("Center")),
+                  TextButton(
+                      onPressed: () => _fileManagementProvider.textPositionChange(Alignment.bottomCenter),
+                      child: const Text("Bottom")),
+                ]),
+                const Divider(),
+                const SizedBox(height: 20),
+                const Text('Horizontal and Vertical Padding'),
+                Row(
+                  children: [
+                    Expanded(
+                      child: Slider.adaptive(
+                          label: "Horizontal Padding ${_fileManagementProvider.horizontalPadding}",
+                          value: _fileManagementProvider.horizontalPadding,
+                          min: 25,
+                          max: 200,
+                          divisions: 100,
+                          onChanged: _fileManagementProvider.horizontalPaddingChange),
+                    ),
+                    Expanded(
+                      child: Slider.adaptive(
+                          label: "Vertical Padding ${_fileManagementProvider.verticalPadding}",
+                          value: _fileManagementProvider.verticalPadding,
+                          min: 25,
+                          max: 200,
+                          divisions: 100,
+                          onChanged: _fileManagementProvider.verticalPaddingChange),
+                    ),
+                  ],
                 ),
                 GestureDetector(
                   onTap: () {
-                    !_fileManagementProvider.isProcessing
-                        ? _fileManagementProvider.generatePicture()
-                        : null;
+                    !_fileManagementProvider.isProcessing ? _fileManagementProvider.generatePicture() : null;
                   },
                   child: FloatingActionButton.extended(
-                      onPressed: _fileManagementProvider.generatePicture,
-                      label: const Text('Generate')),
+                      onPressed: _fileManagementProvider.generatePicture, label: const Text('Generate')),
                 ),
               ],
             ),
@@ -447,10 +419,7 @@ class _QuotePageState extends State<QuotePage> {
           controller: ScrollController(),
           shrinkWrap: true,
           gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-              crossAxisCount: 2,
-              childAspectRatio: 2.5,
-              crossAxisSpacing: 5,
-              mainAxisSpacing: 5),
+              crossAxisCount: 2, childAspectRatio: 2.5, crossAxisSpacing: 5, mainAxisSpacing: 5),
           itemBuilder: (context, index) {
             String font = GoogleFonts.asMap().keys.toList()[index];
             return GestureDetector(
@@ -470,40 +439,38 @@ class _QuotePageState extends State<QuotePage> {
           itemCount: GoogleFonts.asMap().keys.toList().length,
         ),
         CustomScrollView(
-         slivers: [
-           SliverToBoxAdapter(
-             child: GridView.builder(
-               controller: ScrollController(),
-               shrinkWrap: true,
-               gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                   crossAxisCount: 3, crossAxisSpacing: 5, mainAxisSpacing: 5),
-               itemCount: assetImages.length,
-               itemBuilder: (context, index) {
-                 String image = assetImages[index];
-                 return InkWell(
-                     onTap: () =>
-                         _fileManagementProvider.backgroundImageChange(image),
-                     child: ImageWidget(urlOrPath: image));
-               },
-             ),
-           ),
-           SliverToBoxAdapter(
-             child: GridView.builder(
-               controller: ScrollController(),
-               shrinkWrap: true,
-               gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                   crossAxisCount: 3, crossAxisSpacing: 5, mainAxisSpacing: 5),
-               itemCount: networkImages.length,
-               itemBuilder: (context, index) {
-                 String image = networkImages[index];
-                 return InkWell(
-                     onTap: () =>
-                         _fileManagementProvider.backgroundImageChange(image),
-                     child: ImageWidget(urlOrPath: image));
-               },
-             ),
-           ),
-         ],
+          slivers: [
+            SliverToBoxAdapter(
+              child: GridView.builder(
+                controller: ScrollController(),
+                shrinkWrap: true,
+                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                    crossAxisCount: 3, crossAxisSpacing: 5, mainAxisSpacing: 5),
+                itemCount: assetImages.length,
+                itemBuilder: (context, index) {
+                  String image = assetImages[index];
+                  return InkWell(
+                      onTap: () => _fileManagementProvider.backgroundImageChange(image),
+                      child: ImageWidget(urlOrPath: image));
+                },
+              ),
+            ),
+            SliverToBoxAdapter(
+              child: GridView.builder(
+                controller: ScrollController(),
+                shrinkWrap: true,
+                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                    crossAxisCount: 3, crossAxisSpacing: 5, mainAxisSpacing: 5),
+                itemCount: networkImages.length,
+                itemBuilder: (context, index) {
+                  String image = networkImages[index];
+                  return InkWell(
+                      onTap: () => _fileManagementProvider.backgroundImageChange(image),
+                      child: ImageWidget(urlOrPath: image));
+                },
+              ),
+            ),
+          ],
         )
       ];
 }

@@ -14,10 +14,10 @@ class _MenuBarState extends State<MenuBar> with SingleTickerProviderStateMixin {
     final DrawerProvider _drawerProvider = Provider.of<DrawerProvider>(context);
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 15),
-      child:  Row(
+      child: Row(
         children: List.generate(
           items.length,
-              (index) => _buildMenuItem(index, _drawerProvider),
+          (index) => _buildMenuItem(index, _drawerProvider),
         ),
       ),
     );
