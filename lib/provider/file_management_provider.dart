@@ -32,48 +32,56 @@ class FileManagementProvider extends ChangeNotifier {
   }
 
   double selectedRadius = 5.0;
+
   radiusChange(double radius) {
     selectedRadius = radius;
     notifyListeners();
   }
 
   double selectedHeight = 400;
+
   heightChange(double height) {
     selectedHeight = height;
     notifyListeners();
   }
 
   double selectedWidth = 400;
+
   widthChange(double width) {
     selectedWidth = width;
     notifyListeners();
   }
 
   double selectedFontSize = 30;
+
   fontSizeChange(double size) {
     selectedFontSize = size;
     notifyListeners();
   }
 
   double selectedLineHeight = 1.0;
+
   lineHeightChange(double h) {
     selectedLineHeight = h;
     notifyListeners();
   }
 
   FontWeight selectedFontWeight = FontWeight.bold;
+
   fontWeightChange(FontWeight w) {
     selectedFontWeight = w;
     notifyListeners();
   }
 
   Alignment align = Alignment.center;
+
   textPositionChange(Alignment position) {
     align = position;
     notifyListeners();
   }
 
   String selectedFont = 'Lato';
+
   fontChange(String font) {
     selectedFont = font;
     notifyListeners();
@@ -81,6 +89,7 @@ class FileManagementProvider extends ChangeNotifier {
 
   bool isNetworkImage = false;
   String backgroundImage = assetImages[4];
+
   backgroundImageChange(String asset) {
     if (asset == 'assets/random.png') {
       backgroundImage = assetImages[Random().nextInt(assetImages.length)];
@@ -131,17 +140,16 @@ class FileManagementProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  final StreamController<String> _quoteStreamController =
-      StreamController<String>.broadcast();
+  final StreamController<String> _quoteStreamController = StreamController<String>.broadcast();
 
   Stream<String> get quoteStream => _quoteStreamController.stream;
+  List<List<dynamic>> quotesList = [];
 
   generatePicture() async {
-    List<String> quotesList = quotesTextController.text.split("\n");
     // quotesTextController.clear();
     processingChange(true);
     List<Future<void>> ssList = [];
-    for (String quote in quotesList) {
+    for (List<dynamic> quote in quotesList) {
       Widget quoteWidget = Stack(
         children: [
           ClipRRect(
@@ -158,40 +166,42 @@ class FileManagementProvider extends ChangeNotifier {
             width: selectedWidth,
             height: selectedHeight,
             padding: const EdgeInsets.all(50),
-            decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(selectedRadius),
-                color: selectedColor),
+            decoration: BoxDecoration(borderRadius: BorderRadius.circular(selectedRadius), color: selectedColor),
           ),
           Container(
-            alignment: align,
-            width: selectedWidth,
-            height: selectedHeight,
-            padding: EdgeInsets.symmetric(
-                horizontal: horizontalPadding, vertical: verticalPadding),
-            child: Text(
-              quote,
-              textAlign: TextAlign.center,
-              style: GoogleFonts.getFont(selectedFont,
-                  color: selectedTextColor,
-                  fontSize: selectedFontSize,
-                  fontWeight: selectedFontWeight,
-                  height: selectedLineHeight),
-            ),
-          )
+              alignment: align,
+              width: selectedWidth,
+              height: selectedHeight,
+              padding: EdgeInsets.symmetric(horizontal: horizontalPadding, vertical: verticalPadding),
+              child: RichText(
+                  textAlign: TextAlign.center,
+                  text: TextSpan(children: [
+                    TextSpan(
+                        text: '${quote[0] ?? ''}',
+                        style: GoogleFonts.getFont(selectedFont,
+                            color: selectedTextColor,
+                            fontSize: selectedFontSize,
+                            fontWeight: selectedFontWeight,
+                            height: selectedLineHeight)),
+                    TextSpan(
+                        text: '\n${quote[1] ?? ''}',
+                        style: GoogleFonts.getFont(selectedFont,
+                            color: selectedTextColor,
+                            fontSize: selectedFontSize * 0.5,
+                            fontWeight: selectedFontWeight,
+                            height: selectedLineHeight)),
+                  ]))),
         ],
       );
-      Uint8List output = await screenshotController.captureFromWidget(
-          quoteWidget,
-          delay: const Duration(milliseconds: 0));
-      Future<void> imageData = download(Stream.fromIterable(output),
-          'quote_${DateTime.now().microsecondsSinceEpoch}.png');
+      Uint8List output =
+          await screenshotController.captureFromWidget(quoteWidget, delay: const Duration(milliseconds: 0));
+      Future<void> imageData =
+          download(Stream.fromIterable(output), 'quote_${DateTime.now().microsecondsSinceEpoch}.png');
       ssList.add(imageData);
     }
     await Future.wait([...ssList]);
     processingChange(false);
   }
-
-
 
   Future<List<List<dynamic>>?> pickFileAndGetData() async {
     FilePickerResult? result = await FilePicker.platform.pickFiles(
@@ -200,11 +210,11 @@ class FileManagementProvider extends ChangeNotifier {
       allowedExtensions: ['csv'],
     );
 
-
     if (result != null) {
       PlatformFile? file = result.files.first;
       final fileBytes = result.files.first.bytes;
-      final input = File.fromRawPath(fileBytes!).openRead();;
+      final input = File.fromRawPath(fileBytes!).openRead();
+      ;
       // final input = File(file.path!).openRead();
       final fields = await input.transform(utf8.decoder).transform(const CsvToListConverter()).toList();
 
@@ -218,7 +228,6 @@ class FileManagementProvider extends ChangeNotifier {
     return null;
   }
 }
-
 
 List<String> assetImages = [
   'assets/random.png',

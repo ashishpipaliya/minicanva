@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:developer';
 import 'dart:io';
+import 'dart:typed_data';
 
 import 'package:csv/csv.dart';
 import 'package:file_picker/file_picker.dart';
@@ -123,7 +124,9 @@ class _QuotePageState extends State<QuotePage> {
                             horizontal: _fileManagementProvider.horizontalPadding,
                             vertical: _fileManagementProvider.verticalPadding),
                         child: Text(
-                          'Demo quote sample quote demo quote sample quotes demo quote sample quotes demo quote sample quotes',
+                          _fileManagementProvider.quotesList.isNotEmpty
+                              ? _fileManagementProvider.quotesList[0][0]
+                              : 'Select CSV first',
                           textAlign: TextAlign.center,
                           style: GoogleFonts.getFont(_fileManagementProvider.selectedFont,
                               color: _fileManagementProvider.selectedTextColor,
@@ -173,30 +176,24 @@ class _QuotePageState extends State<QuotePage> {
             child: Column(
               children: [
                 Container(
-                  constraints: const BoxConstraints(maxHeight: 200),
-                  child: TextField(
-                    controller: _fileManagementProvider.quotesTextController,
-                    maxLines: null,
-                    minLines: 6,
-                    decoration: InputDecoration(
-                        filled: true,
-                        isDense: true,
-                        contentPadding: const EdgeInsets.all(8),
-                        border: OutlineInputBorder(borderRadius: BorderRadius.circular(15)),
-                        hintText: 'Enter quotes one in a line'),
-                  ),
+                  constraints:  BoxConstraints(maxHeight: 200, maxWidth:Responsive.isDesktop(context) ? 400 : 300 ),
+                  child: ListView.builder(
+                    shrinkWrap: true,
+                    itemCount: _fileManagementProvider.quotesList.length,
+                    itemBuilder: (context, index) {
+                   return Container(
+                     margin: const EdgeInsets.all(5),
+                     padding: const EdgeInsets.all(5),
+                       decoration: BoxDecoration(borderRadius: BorderRadius.circular(8), color: Theme.of(context).primaryColor.withOpacity(0.1)),
+                       child: Text(_fileManagementProvider.quotesList[index][0] ?? ''));
+                  },),
                 ),
                 const SizedBox(height: 10),
-                const Text('OR'),
                 Container(
                   margin: const EdgeInsets.only(top: 10),
                   child: ElevatedButton(
                       onPressed: () async {
-                        // _fileManagementProvider.pickFileAndGetData().then((value) {
-                        //   if(value!= null){
-                        //     _fileManagementProvider.quotesTextController.text = value.join('\n');
-                        //   }
-                        // });
+                      String text = '';
 
                         FilePickerResult? result = await FilePicker.platform.pickFiles(
                           type: FileType.custom,
@@ -205,19 +202,20 @@ class _QuotePageState extends State<QuotePage> {
                         );
 
                         if (result != null) {
+                          _fileManagementProvider.quotesList.clear();
                           PlatformFile? file = result.files.first;
-                          final fileBytes = result.files.first.bytes;
-                          final input = File.fromRawPath(fileBytes!).openRead();
-                          // final input = File(file.path!).openRead();
-                          final fields =
-                              await input.transform(utf8.decoder).transform(const CsvToListConverter()).toList();
+                          final Uint8List? fileBytes = file.bytes;
+
+                          String text = utf8.decode(fileBytes ?? []);
+                          final fields = const CsvToListConverter().convert(text);
+                          for (var element in fields) {
+                            text += element.join(",");
+                            _fileManagementProvider.quotesList.add(element);
+                          }
+                          _fileManagementProvider.quotesTextController.text = text;
+                          setState(() {});
                         }
                       },
-                      // csvData = fields;
-                      // for (var element in fields) {
-                      //   print('Title - ${element[0]} | Name - ${element[1]}');
-                      // }
-
                       child: const Text('Choose CSV file')),
                 ),
                 const Divider(),
